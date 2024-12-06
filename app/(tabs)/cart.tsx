@@ -1,11 +1,12 @@
 import LocationSelector from "@/components/LocationSelector";
 import { setAddress } from "@/redux/addressSlice";
 import { removeFromCart, updateQuantity } from "@/redux/cartSlice";
+import { toggleReorder } from "@/redux/reorderSlice";
 import { Product } from "@/types/types";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import "../../global.css";
@@ -19,14 +20,16 @@ interface RootState {
   cart: {
     items: CartItem[];
   };
+  address: {
+    title: string;
+  };
 }
 
 const cart: React.FC = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const [isplaced, setIsplaced] = useState(false);
+  const currentAddress = useSelector((state: RootState) => state.address.title);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const currentAddress = useSelector((state: any) => state.address.title);
 
   const handleAddressSelect = useCallback(
     (selectedAddress: string) => {
@@ -94,7 +97,7 @@ const cart: React.FC = () => {
         </Text>
         <TouchableOpacity
           className="bg-blue-500 px-8 py-3 rounded-full"
-          onPress={() => router.navigate("/categorypage")}
+          onPress={() => router.navigate("/")}
         >
           <Text className="text-white font-semibold text-lg">
             Start Shopping
@@ -174,26 +177,32 @@ const cart: React.FC = () => {
             ₹{calculateTotal().toFixed(2)}
           </Text>
         </View>
-        {isplaced ? (
+
+        <TouchableOpacity
+          className="bg-blue-500 p-4 rounded-lg mt-4"
+          onPress={handlePresentBottomSheet}
+        >
+          <Text className="text-white text-center font-semibold text-lg">
+            {currentAddress
+              ? `Deliver to: ${currentAddress}`
+              : "Select Address"}
+          </Text>
+        </TouchableOpacity>
+
+        {currentAddress && (
           <TouchableOpacity
-            className="bg-blue-500 p-4 rounded-lg mt-4"
-            onPress={handlePresentBottomSheet}
+            className="bg-green-500 p-4 rounded-lg mt-4"
+            onPress={() => {
+              dispatch(toggleReorder(cartItems));
+            }}
           >
             <Text className="text-white text-center font-semibold text-lg">
-              Delivering to: {currentAddress || "Select Address"}
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            className="bg-blue-400 p-4 rounded-lg mt-4"
-            onPress={() => setIsplaced(true)}
-          >
-            <Text className="text-white text-center font-semibold text-lg">
-              Proceed to Checkout
+              Proceed to Payment
             </Text>
           </TouchableOpacity>
         )}
       </View>
+
       <LocationSelector
         ref={bottomSheetRef}
         onAddressSelect={handleAddressSelect}

@@ -1,29 +1,27 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Dimensions,
   useWindowDimensions,
 } from "react-native";
-
 import { Product } from "@/types/types";
 import axios from "axios";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ProductCard } from "@/components/ProductCard";
 
 export default function Search() {
-  const { width } = useWindowDimensions(); // Use hook instead of static Dimensions
+  const { width } = useWindowDimensions();
   const [searchQuery, setSearchQuery] = useState("");
 
   // Calculate layout values
   const gap = 12;
-  const numColumns = width > 640 ? 3 : 2; // 3 columns on wider screens, 2 on smaller
+  const numColumns = width > 640 ? 3 : 2;
   const padding = 16;
   const itemWidth = (width - padding * 2 - gap * (numColumns - 1)) / numColumns;
 
@@ -43,43 +41,6 @@ export default function Search() {
     enabled: searchQuery.length > 0,
   });
 
-  const renderProduct = ({ item }: { item: Product }) => (
-    <TouchableOpacity
-      onPress={() => {}}
-      className="bg-white rounded-lg shadow-sm"
-      style={{
-        width: itemWidth,
-        marginBottom: gap,
-      }}
-    >
-      <Image
-        source={{ uri: item.thumbnail }}
-        className="w-full rounded-t-lg"
-        style={{
-          height: itemWidth * 0.75, // Make height proportional to width
-          resizeMode: "cover",
-        }}
-      />
-      <View className="p-3">
-        <Text className="text-sm font-semibold mb-1" numberOfLines={1}>
-          {item.title}
-        </Text>
-        <Text className="text-xs text-gray-500 mb-2" numberOfLines={2}>
-          {item.description}
-        </Text>
-        <View className="flex-row items-center justify-between">
-          <Text className="text-green-600 font-bold text-base">
-            ${item.price}
-          </Text>
-          <View className="flex-row items-center">
-            <Ionicons name="star" size={14} color="#FFD700" />
-            <Text className="ml-1 text-xs">{item.rating}</Text>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-
   const renderEmptyState = () => (
     <View className="flex-1 items-center justify-center p-4">
       <Ionicons name="search-outline" size={48} color="gray" />
@@ -89,6 +50,10 @@ export default function Search() {
           : "Search for products"}
       </Text>
     </View>
+  );
+
+  const renderProduct = ({ item }: { item: Product }) => (
+    <ProductCard item={item} key={item.id.toString()}/>
   );
 
   return (
@@ -125,7 +90,7 @@ export default function Search() {
         </View>
       ) : (
         <FlatList
-          key={`${numColumns}`} // Add key to force re-render when columns change
+          key={`${numColumns}`}
           data={products}
           renderItem={renderProduct}
           keyExtractor={(item) => item.id.toString()}
@@ -137,7 +102,7 @@ export default function Search() {
           numColumns={numColumns}
           ListHeaderComponent={
             products?.length ? (
-              <Text className="text-gray-500 mb-4">
+              <Text className="text-gray-500 mb-4 ">
                 {products.length} products found
               </Text>
             ) : null

@@ -1,3 +1,4 @@
+import CartComponent from "@/components/CartComponent";
 import { ProductCard } from "@/components/ProductCard";
 import { Product } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
@@ -73,6 +74,7 @@ export default function Products() {
           </Text>
         }
       />
+      <CartComponent/>
     </View>
   );
 }

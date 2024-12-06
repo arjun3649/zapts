@@ -4,7 +4,7 @@
     "slug": "zapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo-no-background.png",
     "scheme": "myapp",
     "splash": {
       "image": "./assets/images/logo-no-background.png",
@@ -18,14 +18,15 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.arjun3649.zapp"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": ""
     },
     "plugins": [
       "expo-router",
@@ -42,9 +43,22 @@
         }
       ]
     ],
-
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d2e7e8eb-c2e4-41fc-ab7b-36fe77be5779"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d2e7e8eb-c2e4-41fc-ab7b-36fe77be5779"
     }
   }
 }

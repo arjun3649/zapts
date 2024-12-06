@@ -1,21 +1,18 @@
+import { addToCart, removeFromCart, updateQuantity } from "@/redux/cartSlice";
 import { Product } from "@/types/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import React from "react";
+import React, { FC } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addToCart,
-  removeFromCart,
-  updateQuantity,
-} from "@/redux/cartSlice";
+interface ProductCardProps {
+  item: Product;
+}
 
-
-
-export const ProductCard = ({ item }: { item: Product }) => {
+export const ProductCard: FC<ProductCardProps> = ({ item }) => {
   const dispatch = useDispatch();
   const cartItem = useSelector((state: any) =>
-    state.cart.items.find((cartItem:any) => cartItem.id === item.id)
+    state.cart.items.find((cartItem: any) => cartItem.id === item.id)
   );
 
   const handleAddToCart = () => {
@@ -55,10 +52,10 @@ export const ProductCard = ({ item }: { item: Product }) => {
 
   return (
     <View
-      className="bg-white rounded-lg shadow-sm mb-4"
+      className="bg-white rounded-lg shadow-sm mb-5 mx-1"
       style={{ width: "48%" }}
     >
-      <Link href={""} asChild>
+      <Link href={"/"} asChild>
         <TouchableOpacity activeOpacity={0.7}>
           <Image
             source={{ uri: item.thumbnail }}
@@ -79,7 +76,7 @@ export const ProductCard = ({ item }: { item: Product }) => {
 
         <View className="flex-row items-center justify-between mb-3">
           <Text className="text-green-600 font-bold text-base">
-            ${item.price.toFixed(2)}
+            ${item.price}
           </Text>
 
           <View className="flex-row items-center">

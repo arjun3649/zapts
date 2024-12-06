@@ -1,70 +1,82 @@
+import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
-// import { clearCart } from "../../Redux/cartSlice";
+import { clearCart } from "@/redux/cartSlice";
 
-const CartIcon = () => {
-//   const cartItems = useSelector((state) => state.cart.items);
-//   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+interface CartIconProps {
+  color?: string;
+  size?: number;
+}
 
-//   return (
-//     <View>
-//       <Ionicons name="cart-outline" size={size} color={color} />
-//       {itemCount > 0 && (
-//         <View
-//           style={{
-//             position: "absolute",
-//             top: -1,
-//             right: -7,
-//             backgroundColor: "red",
-//             borderRadius: 10,
-//             minWidth: 15,
-//             height: 15,
-//             justifyContent: "center",
-//             alignItems: "center",
-//           }}
-//         >
-//           <Text
-//             style={{
-//               color: "white",
-//               fontSize: 12,
-//               fontWeight: "bold",
-//               paddingHorizontal: 4,
-//             }}
-//           >
-//             {itemCount}
-//           </Text>
-//         </View>
-//       )}
-//     </View>
-//   );
- };
+const CartIcon: React.FC<CartIconProps> = ({ color = "black", size = 24 }) => {
+  const cartItems = useSelector((state: any) => state.cart.items);
+  const itemCount = cartItems.reduce(
+    (total: number, item: any) => total + item.quantity,
+    0
+  );
+
+  return (
+    <View style={{ position: "relative" }}>
+      <Ionicons name="cart-outline" size={size} color={color} />
+      {itemCount > 0 && (
+        <View
+          style={{
+            position: "absolute",
+            top: -1,
+            right: -7,
+            backgroundColor: "red",
+            borderRadius: 10,
+            minWidth: 15,
+            height: 15,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 12,
+              fontWeight: "bold",
+              paddingHorizontal: 4,
+            }}
+          >
+            {itemCount}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
 
 export default function Layout() {
   const dispatch = useDispatch();
+  const cartItems = useSelector((state: any) => state.cart.items);
+  const itemCount = cartItems.reduce(
+    (total: number, item: any) => total + item.quantity,
+    0
+  );
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tabs
-        screenOptions={{
+        screenOptions={({ route }) => ({
           headerTintColor: "black",
           headerShadowVisible: true,
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                ("");
-              }}
-            >
-              <Ionicons
-                name="trash-outline"
-                size={24}
-                color="black"
+          headerRight: () =>
+            route.name === "cart" && itemCount > 0 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(clearCart());
+                }}
                 style={{ marginRight: 15 }}
-              />
-            </TouchableOpacity>
-          ),
-        }}
+              >
+                <Ionicons name="trash-outline" size={24} color="black" />
+              </TouchableOpacity>
+            ) : undefined,
+        })}
       >
         <Tabs.Screen
           name="index"
@@ -102,7 +114,7 @@ export default function Layout() {
             headerShown: true,
             title: "Cart",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="cart-outline" size={size} color={color} />
+              <CartIcon color={color} size={size} />
             ),
           }}
         />

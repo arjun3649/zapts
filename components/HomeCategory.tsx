@@ -50,15 +50,13 @@ export default function HomeCategory() {
             key={category.slug}
             className="items-center mb-4"
             style={{ width: "22%", margin: "1%" }}
-            onPress={() => handleclick(category)} 
+            onPress={() => handleclick(category)}
           >
             <Image
               source={{ uri: categoryImages[category.slug] }}
               className="w-20 h-24 rounded-lg"
             />
-            <Text className="text-center text-sm mt-2">
-              {category.name}
-            </Text>
+            <Text className="text-center text-sm mt-2">{category.name}</Text>
           </TouchableOpacity>
         ))}
       </View>

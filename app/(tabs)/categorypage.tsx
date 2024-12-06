@@ -1,9 +1,10 @@
 import Address from "@/components/Address";
+import HomeCategory from "@/components/HomeCategory";
 import LocationSelector from "@/components/LocationSelector";
 import { setAddress } from "@/redux/addressSlice";
 import BottomSheet from "@gorhom/bottom-sheet";
 import React, { useCallback, useRef } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -39,6 +40,14 @@ const categorypage: React.FC<HomepageProps> = () => {
         handleBottomBar={handlePresentBottomSheet}
       />
 
+      {/* Main Content */}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <HomeCategory />
+      </ScrollView>
+
       <LocationSelector
         ref={bottomSheetRef}
         onAddressSelect={handleAddressSelect}
@@ -49,14 +58,21 @@ const categorypage: React.FC<HomepageProps> = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: "#fff",
+    height: "100%",
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
+  },
+  selectorContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
   },
 });
 
